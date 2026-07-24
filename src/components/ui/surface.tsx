@@ -8,16 +8,16 @@ export function Panel({ children, className = "" }: { children: ReactNode; class
   );
 }
 
-// Small-caps section label used above lists and groups.
+// Small section label used above lists and groups.
 export function SectionLabel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <h3 className={`text-xs font-semibold uppercase tracking-widest text-ink-muted ${className}`}>
+    <h3 className={`font-handwritten text-xs text-ink-muted ${className}`}>
       {children}
     </h3>
   );
 }
 
-// Screen-level heading with the serif display voice.
+// Screen-level heading with the cursive display voice.
 export function ScreenTitle({ children, sub }: { children: ReactNode; sub?: ReactNode }) {
   return (
     <div>
