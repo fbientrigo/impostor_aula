@@ -48,13 +48,6 @@ const config: Config = {
         display: ["Annotation Mono", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
         handwritten: ["Annotation Mono", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
       },
-      borderRadius: {
-        control: "1rem",
-        cozy: "1.5rem",
-      },
-      boxShadow: {
-        soft: "0 12px 36px -24px rgb(75 58 38 / 45%), 0 3px 12px -8px rgb(75 58 38 / 22%)",
-      },
       animation: {
         rise: "rise 240ms ease-out both",
         "card-reveal": "card-reveal 200ms ease-out both",
