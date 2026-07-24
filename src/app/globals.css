@@ -13,67 +13,64 @@
   font-display: swap;
 }
 
-/* Design tokens — warm classroom notebook. */
+/* Design tokens — "cuaderno de laboratorio".
+   Warm paper neutrals, deep teal-green actions, coral reserved for the
+   impostor identity. Change a value here and the whole app follows.
+   Documented in docs/frontend-design-system.md. */
 :root {
   color-scheme: light;
 
   /* Neutrals */
-  --color-paper: #f8f3e9;
-  --color-surface: #fffdf8;
-  --color-ink: #2d342f;
-  --color-ink-secondary: #5e665f;
-  --color-ink-muted: #858b84;
-  --color-edge: #e8ddcd;
-  --color-edge-strong: #d0c0aa;
+  --color-paper: #f6f4ee; /* page background */
+  --color-surface: #ffffff; /* elevated surface */
+  --color-ink: #22302b; /* primary text */
+  --color-ink-secondary: #51605a; /* secondary text */
+  --color-ink-muted: #7d8a84; /* muted / hint text */
+  --color-edge: #e3dfd4; /* borders */
+  --color-edge-strong: #c9c4b6; /* form-control borders */
 
   /* Primary action (leaf) */
-  --color-leaf: #3f7567;
-  --color-leaf-strong: #2f5e53;
-  --color-leaf-soft: #e5f0e9;
-  --color-leaf-deep: #274c44;
+  --color-leaf: #14695d;
+  --color-leaf-strong: #0e5148;
+  --color-leaf-soft: #e2eeea; /* tint background */
+  --color-leaf-deep: #0b3d36; /* text on tint */
 
   /* Impostor / danger (coral) */
-  --color-coral: #b85d4b;
-  --color-coral-strong: #984737;
-  --color-coral-soft: #f8e9e3;
-  --color-coral-deep: #73372c;
+  --color-coral: #b23c2b;
+  --color-coral-strong: #93291b;
+  --color-coral-soft: #f9e9e4;
+  --color-coral-deep: #6e2015;
 
   /* States */
-  --color-success: #4f7d54;
-  --color-success-soft: #e7f0e5;
-  --color-warning: #916a25;
-  --color-warning-soft: #fbf0d9;
-  --color-info: #52758a;
-  --color-info-soft: #e9f0f4;
+  --color-success: #2e7d3f;
+  --color-success-soft: #e4f1e2;
+  --color-warning: #8a5b0a;
+  --color-warning-soft: #fbf1da;
+  --color-info: #2b5f8a;
+  --color-info-soft: #e6eef5;
 
   /* Focus */
-  --color-ring: #3f7567;
+  --color-ring: #14695d;
 }
 
 body {
   @apply bg-paper text-ink antialiased;
-  min-height: 100dvh;
-  background-image:
-    radial-gradient(circle at 8% 4%, rgb(229 240 233 / 65%), transparent 28rem),
-    radial-gradient(circle at 92% 96%, rgb(248 233 227 / 60%), transparent 26rem);
-  background-attachment: fixed;
 }
 
-/* Beautiful cursive voice for page and app titles. */
+/* Cursive voice for page titles and the app wordmark. */
 .font-display {
   font-family: "Annotation Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
   font-weight: 720;
   font-variation-settings: "wght" 720, "slnt" -12, "CRSV" 1;
-  letter-spacing: -0.035em;
-  text-shadow: 0 1px 0 rgb(255 255 255 / 72%);
+  letter-spacing: -0.03em;
 }
 
-/* Upright handwritten voice: warmer than a UI sans, but easy to scan. */
+/* Upright handwritten voice for buttons, menus and short labels. */
 .font-handwritten {
   font-family: "Annotation Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-  font-weight: 560;
-  font-variation-settings: "wght" 560, "slnt" 0, "CRSV" 0;
-  letter-spacing: -0.015em;
+  font-weight: 570;
+  font-variation-settings: "wght" 570, "slnt" 0, "CRSV" 0;
+  letter-spacing: -0.01em;
 }
 
 /* Personal signature used in the page corner. */
@@ -87,8 +84,8 @@ body {
 /* Visible keyboard focus everywhere; mouse clicks stay quiet. */
 :focus-visible {
   outline: 2px solid var(--color-ring);
-  outline-offset: 3px;
-  border-radius: 8px;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Functional motion only — every animation collapses under reduced motion. */
