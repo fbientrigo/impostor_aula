@@ -1,18 +1,22 @@
 "use client";
 
 import { useLang } from "@/components/LangProvider";
-import { Panel } from "@/components/ui";
+import { CheckIcon, Panel, WaitingHint } from "@/components/ui";
 
 export function StudentWaitingScreen({ displayName }: { displayName: string }) {
   const { t } = useLang();
   return (
-    <Panel className="mx-auto flex max-w-sm flex-col items-center gap-3 text-center">
-      <span className="text-5xl">✅</span>
-      <h2 className="text-xl font-bold">{t("wait.title")}</h2>
-      <p className="text-slate-500">{t("wait.desc")}</p>
-      <p className="text-sm text-slate-400">
-        {t("wait.joinedAs")}: <span className="font-semibold text-slate-600">{displayName}</span>
-      </p>
+    <Panel className="mx-auto flex max-w-sm animate-rise flex-col items-center gap-4 text-center">
+      <span aria-hidden className="flex h-14 w-14 items-center justify-center rounded-full bg-success-soft text-success">
+        <CheckIcon width={28} height={28} />
+      </span>
+      <div>
+        <h2 className="font-display text-2xl font-bold text-ink">{t("wait.title")}</h2>
+        <p className="mt-1 text-ink-secondary">
+          {t("wait.joinedAs")}: <span className="font-semibold text-ink">{displayName}</span>
+        </p>
+      </div>
+      <WaitingHint>{t("wait.desc")}</WaitingHint>
     </Panel>
   );
 }

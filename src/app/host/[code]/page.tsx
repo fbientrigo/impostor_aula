@@ -8,11 +8,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
-import { Panel, Spinner } from "@/components/ui";
+import { Panel, PhaseIndicator, Spinner } from "@/components/ui";
 import { useLang } from "@/components/LangProvider";
 import { useRoomChannel } from "@/hooks/useRoomChannel";
 import { getParticipants, getRoom, type PublicRoom, type RosterEntry } from "@/lib/client";
 import { getHostToken } from "@/lib/storage";
+import { PHASE_STEPS, phaseStepIndex } from "@/lib/presentation";
 import type { Concept } from "@/lib/types";
 import { TeacherLobbyScreen } from "@/components/teacher/TeacherLobbyScreen";
 import { TeacherRoundControlScreen } from "@/components/teacher/TeacherRoundControlScreen";
@@ -58,7 +59,7 @@ export default function HostPage() {
   } else if (hostToken === null) {
     body = (
       <Panel>
-        <p className="text-slate-600">
+        <p className="text-ink-secondary">
           {t("common.error")} (no host token for room {code})
         </p>
       </Panel>
@@ -89,7 +90,17 @@ export default function HostPage() {
   return (
     <main className="min-h-dvh">
       <AppHeader />
-      <div className="mx-auto w-full max-w-5xl px-4 py-6">{body}</div>
+      <div className="mx-auto w-full max-w-5xl px-4 pb-10 pt-2">
+        {room ? (
+          <div className="mb-4">
+            <PhaseIndicator
+              steps={PHASE_STEPS.map((s) => ({ key: s.status, label: t(s.label) }))}
+              currentIndex={phaseStepIndex(room.status)}
+            />
+          </div>
+        ) : null}
+        {body}
+      </div>
     </main>
   );
 }

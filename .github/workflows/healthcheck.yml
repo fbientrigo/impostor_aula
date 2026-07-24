@@ -1,0 +1,43 @@
+name: Healthcheck
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * 1,4"
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check Vercel and Supabase
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+          HEALTHCHECK_SECRET: ${{ secrets.HEALTHCHECK_SECRET }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${HEALTHCHECK_URL}" ] || [ -z "${HEALTHCHECK_SECRET}" ]; then
+            echo "Missing HEALTHCHECK_URL or HEALTHCHECK_SECRET secret" >&2
+            exit 1
+          fi
+
+          response="$(curl --fail --silent --show-error --max-time 30 \
+            --header "Authorization: Bearer ${HEALTHCHECK_SECRET}" \
+            "${HEALTHCHECK_URL}")"
+
+          RESPONSE="${response}" node -e '
+            const raw = process.env.RESPONSE;
+            let body;
+            try {
+              body = JSON.parse(raw);
+            } catch {
+              console.error("Healthcheck returned non-JSON:", raw);
+              process.exit(1);
+            }
+            if (body?.ok !== true) {
+              console.error("Healthcheck did not return ok:true:", raw);
+              process.exit(1);
+            }
+            console.log("Healthcheck OK:", raw);
+          '

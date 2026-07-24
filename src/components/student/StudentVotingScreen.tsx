@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel } from "@/components/ui";
+import { BallotIcon, Button, CheckIcon, ErrorText, Panel, TextArea } from "@/components/ui";
 import { castVote, type RosterEntry } from "@/lib/client";
 import type { ParticipantIdentity } from "@/lib/storage";
 
@@ -43,9 +43,11 @@ export function StudentVotingScreen({ code, identity, participants, requireJusti
 
   if (submitted) {
     return (
-      <Panel className="mx-auto flex max-w-sm flex-col items-center gap-3 text-center">
-        <span className="text-5xl">🗳️</span>
-        <h2 className="text-xl font-bold">{t("svote.submitted")}</h2>
+      <Panel className="mx-auto flex max-w-sm animate-rise flex-col items-center gap-3 text-center">
+        <span aria-hidden className="flex h-14 w-14 items-center justify-center rounded-full bg-success-soft text-success">
+          <CheckIcon width={28} height={28} />
+        </span>
+        <h2 className="font-display text-xl font-bold text-ink">{t("svote.submitted")}</h2>
         <Button variant="ghost" onClick={() => setSubmitted(false)}>
           {t("svote.changeVote")}
         </Button>
@@ -54,18 +56,23 @@ export function StudentVotingScreen({ code, identity, participants, requireJusti
   }
 
   return (
-    <Panel className="mx-auto flex max-w-sm flex-col gap-4">
-      <h2 className="text-xl font-bold">{t("svote.title")}</h2>
-      <p className="text-sm text-slate-500">{t("svote.pick")}</p>
-      <ul className="grid grid-cols-2 gap-2">
+    <Panel className="mx-auto flex max-w-sm animate-rise flex-col gap-4">
+      <div className="flex items-center gap-2">
+        <BallotIcon className="text-leaf" />
+        <h2 className="font-display text-xl font-bold text-ink">{t("svote.title")}</h2>
+      </div>
+      <p className="text-sm text-ink-secondary">{t("svote.pick")}</p>
+      <ul className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t("svote.pick")}>
         {candidates.map((p) => (
           <li key={p.id}>
             <button
+              role="radio"
+              aria-checked={selected === p.id}
               onClick={() => setSelected(p.id)}
-              className={`w-full rounded-xl border px-3 py-3 text-sm font-medium transition ${
+              className={`min-h-11 w-full rounded-lg border px-3 py-3 text-sm font-medium transition-colors ${
                 selected === p.id
-                  ? "border-brand-600 bg-brand-50 text-brand-700"
-                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                  ? "border-leaf bg-leaf-soft text-leaf-deep"
+                  : "border-edge bg-surface text-ink-secondary hover:bg-paper"
               }`}
             >
               {p.displayName}
@@ -76,19 +83,18 @@ export function StudentVotingScreen({ code, identity, participants, requireJusti
 
       {requireJustification ? (
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">{t("svote.justification")}</label>
-          <textarea
+          <label className="mb-1 block text-sm font-medium text-ink-secondary">{t("svote.justification")}</label>
+          <TextArea
             value={justification}
             onChange={(e) => setJustification(e.target.value)}
             rows={2}
             placeholder={t("svote.justificationPlaceholder")}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200"
           />
         </div>
       ) : null}
 
       <ErrorText>{error}</ErrorText>
-      <Button onClick={submit} disabled={busy || !selected}>
+      <Button size="lg" onClick={submit} disabled={busy || !selected}>
         {t("svote.submit")}
       </Button>
     </Panel>

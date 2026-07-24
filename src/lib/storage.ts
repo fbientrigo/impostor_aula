@@ -50,3 +50,11 @@ export function getParticipant(code: string): ParticipantIdentity | null {
 export function setParticipant(code: string, identity: ParticipantIdentity): void {
   write(participantKey(code), JSON.stringify(identity));
 }
+export function clearParticipant(code: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(participantKey(code));
+  } catch {
+    /* ignore */
+  }
+}

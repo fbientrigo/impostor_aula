@@ -1,12 +1,13 @@
 "use client";
 
-// Teacher entry point: creates a room, stores the host token in this browser, and
-// navigates to the host dashboard.
+// Teacher entry point: creates a room, stores the host token in this browser,
+// and navigates to the host dashboard. Presented as the landing page's
+// secondary path — students join above it.
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel } from "@/components/ui";
+import { Button, ErrorText } from "@/components/ui";
 import { createRoom } from "@/lib/client";
 import { setHostToken } from "@/lib/storage";
 
@@ -30,15 +31,12 @@ export function CreateRoomScreen() {
   }
 
   return (
-    <Panel className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-xl font-bold">{t("landing.createRoom")}</h2>
-        <p className="mt-1 text-sm text-slate-500">{t("landing.createRoomDesc")}</p>
-      </div>
-      <Button onClick={onCreate} disabled={creating}>
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-edge-strong p-5 text-center">
+      <p className="text-sm text-ink-secondary">{t("landing.createRoomDesc")}</p>
+      <Button variant="secondary" onClick={onCreate} disabled={creating}>
         {creating ? t("create.creating") : t("landing.createRoom")}
       </Button>
       <ErrorText>{error}</ErrorText>
-    </Panel>
+    </div>
   );
 }

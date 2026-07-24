@@ -21,11 +21,33 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
 # local env files
 .env*.local
 .env
 
+# vercel
+.vercel/
+
+# supabase local runtime
+supabase/.temp/
+supabase/.branches/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# editor and tool metadata
+.claude/settings.local.json
+.code-review-graph/
+.vscode/
+.idea/
+*.swp
+*~
+
+# os specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
