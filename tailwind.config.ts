@@ -45,8 +45,15 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
-        // Display voice from built-in serifs: no font download, still distinct.
-        display: ["Charter", "Iowan Old Style", "Sitka Text", "Cambria", "Georgia", "serif"],
+        display: ["Annotation Mono", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
+        handwritten: ["Annotation Mono", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
+      },
+      borderRadius: {
+        control: "1rem",
+        cozy: "1.5rem",
+      },
+      boxShadow: {
+        soft: "0 12px 36px -24px rgb(75 58 38 / 45%), 0 3px 12px -8px rgb(75 58 38 / 22%)",
       },
       animation: {
         rise: "rise 240ms ease-out both",
