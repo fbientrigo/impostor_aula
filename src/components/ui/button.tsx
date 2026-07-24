@@ -6,10 +6,10 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-leaf text-white hover:bg-leaf-strong",
-  secondary: "border border-edge-strong bg-surface text-leaf-deep hover:bg-leaf-soft",
-  ghost: "text-ink-secondary hover:bg-paper hover:text-ink",
-  danger: "bg-coral text-white hover:bg-coral-strong",
+  primary: "bg-leaf text-white shadow-soft hover:bg-leaf-strong",
+  secondary: "border border-edge-strong bg-surface text-leaf-deep shadow-soft hover:bg-leaf-soft",
+  ghost: "text-ink-secondary hover:bg-surface/75 hover:text-ink",
+  danger: "bg-coral text-white shadow-soft hover:bg-coral-strong",
 };
 
 // Minimum 44px touch target from `md` upward.
@@ -27,7 +27,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size }) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`font-handwritten inline-flex items-center justify-center gap-2 rounded-control transition-all hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0 ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     />
   );
@@ -44,7 +44,7 @@ export function IconButton({
     <button
       aria-label={label}
       title={label}
-      className={`inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink-secondary transition-colors hover:bg-paper hover:text-ink disabled:cursor-not-allowed disabled:opacity-45 ${className}`}
+      className={`inline-flex h-11 w-11 items-center justify-center rounded-control text-ink-secondary transition-colors hover:bg-surface/80 hover:text-ink disabled:cursor-not-allowed disabled:opacity-45 ${className}`}
       {...props}
     >
       {children}
