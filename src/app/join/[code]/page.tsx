@@ -5,14 +5,14 @@
 // activity events, and renders the screen for the current phase.
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
-import { Panel, Spinner } from "@/components/ui";
+import { ConfirmDialog, DrawerItem, ExitIcon, Panel, Spinner } from "@/components/ui";
 import { useLang } from "@/components/LangProvider";
 import { useRoomChannel } from "@/hooks/useRoomChannel";
 import { useAwayTracking } from "@/hooks/useAwayTracking";
 import { getParticipants, getRoom, postAway, type PublicRoom, type RosterEntry } from "@/lib/client";
-import { getParticipant, type ParticipantIdentity } from "@/lib/storage";
+import { clearParticipant, getParticipant, type ParticipantIdentity } from "@/lib/storage";
 import { JoinRoomScreen } from "@/components/student/JoinRoomScreen";
 import { StudentWaitingScreen } from "@/components/student/StudentWaitingScreen";
 import { StudentCardScreen } from "@/components/student/StudentCardScreen";
@@ -23,10 +23,12 @@ import { StudentResultsScreen } from "@/components/student/StudentResultsScreen"
 export default function JoinPage() {
   const { code } = useParams<{ code: string }>();
   const { t } = useLang();
+  const router = useRouter();
   const [identity, setIdentity] = useState<ParticipantIdentity | null | undefined>(undefined);
   const [room, setRoom] = useState<PublicRoom | null>(null);
   const [participants, setParticipants] = useState<RosterEntry[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
 
   useEffect(() => {
     setIdentity(getParticipant(code) ?? null);
@@ -56,6 +58,11 @@ export default function JoinPage() {
     if (identity) postAway(code, identity.participantId, identity.secret, type).catch(() => {});
   });
 
+  function leaveRoom() {
+    clearParticipant(code);
+    router.push("/");
+  }
+
   let body: React.ReactNode;
   if (identity === undefined || !loaded || !room) {
     body = <Spinner label={t("common.loading")} />;
@@ -84,15 +91,34 @@ export default function JoinPage() {
   if (identity && loaded && !room) {
     body = (
       <Panel>
-        <p className="text-slate-600">{t("common.error")}</p>
+        <p className="text-ink-secondary">{t("common.error")}</p>
       </Panel>
     );
   }
 
   return (
     <main className="min-h-dvh">
-      <AppHeader />
-      <div className="mx-auto w-full max-w-3xl px-4 py-6">{body}</div>
+      <AppHeader
+        drawerExtras={
+          identity ? (
+            <DrawerItem icon={<ExitIcon />} tone="danger" onClick={() => setConfirmingLeave(true)}>
+              {t("nav.leaveRoom")}
+            </DrawerItem>
+          ) : null
+        }
+      />
+      <div className="mx-auto w-full max-w-3xl px-4 pb-10 pt-2">{body}</div>
+
+      <ConfirmDialog
+        open={confirmingLeave}
+        title={t("leave.title")}
+        body={t("leave.body")}
+        confirmLabel={t("leave.confirm")}
+        cancelLabel={t("common.cancel")}
+        danger
+        onConfirm={leaveRoom}
+        onCancel={() => setConfirmingLeave(false)}
+      />
     </main>
   );
 }

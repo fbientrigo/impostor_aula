@@ -1,8 +1,25 @@
 "use client";
 
+// Teacher lobby, split in two zones:
+// - Projection zone (left): QR, room code, participants — what the class sees.
+// - Preparation zone (right): concept choice, settings behind a disclosure,
+//   and the single primary action ("Start round").
+
 import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel, Spinner } from "@/components/ui";
+import {
+  Button,
+  CheckIcon,
+  CopyIcon,
+  Disclosure,
+  EmptyState,
+  ErrorText,
+  Panel,
+  SectionLabel,
+  Select,
+  Spinner,
+  UsersIcon,
+} from "@/components/ui";
 import { QrCode } from "@/components/QrCode";
 import { RoomCodeBadge } from "@/components/RoomCodeBadge";
 import { SettingsForm } from "@/components/SettingsForm";
@@ -24,10 +41,10 @@ export function TeacherLobbyScreen({ code, hostToken, room, participants, onChan
   const [settings, setSettings] = useState<RoomSettings>(room.settings);
   const [concepts, setConcepts] = useState<Concept[] | null>(null);
   const [selectedId, setSelectedId] = useState<string>("");
-  const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
   const [starting, setStarting] = useState(false);
   const [joinUrl, setJoinUrl] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
@@ -71,76 +88,94 @@ export function TeacherLobbyScreen({ code, hostToken, room, participants, onChan
     const { concept: created } = await createConcept(code, hostToken, concept);
     setConcepts((prev) => [...(prev ?? []), created]);
     setSelectedId(created.id);
-    setShowForm(false);
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(joinUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — the URL is printed below the QR anyway */
+    }
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      {/* Join column */}
-      <Panel className="flex flex-col items-center gap-4">
-        <h2 className="text-lg font-bold">{t("lobby.scanToJoin")}</h2>
-        {joinUrl ? <QrCode value={joinUrl} /> : <Spinner />}
+    <div className="grid gap-6 lg:grid-cols-5">
+      {/* Projection zone */}
+      <Panel className="flex flex-col items-center gap-5 lg:col-span-3">
         <RoomCodeBadge code={code} label={t("lobby.roomCode")} />
-        <p className="break-all text-center text-xs text-slate-400">{joinUrl}</p>
-      </Panel>
+        {joinUrl ? <QrCode value={joinUrl} size={240} /> : <Spinner />}
+        <p className="text-sm font-medium text-ink-secondary">{t("lobby.scanToJoin")}</p>
+        <div className="flex items-center gap-2">
+          <p className="break-all text-center text-xs text-ink-muted">{joinUrl}</p>
+          <button
+            onClick={copyLink}
+            className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-leaf hover:bg-leaf-soft"
+          >
+            {copied ? <CheckIcon width={14} height={14} /> : <CopyIcon width={14} height={14} />}
+            {copied ? t("lobby.copied") : t("lobby.copyLink")}
+          </button>
+        </div>
 
-      {/* Participants column */}
-      <Panel>
-        <h2 className="mb-3 text-lg font-bold">
-          {t("lobby.participants")} ({participants.length})
-        </h2>
-        {participants.length === 0 ? (
-          <p className="text-sm text-slate-400">{t("lobby.noParticipants")}</p>
-        ) : (
-          <ul className="flex flex-wrap gap-2">
-            {participants.map((p) => (
-              <li key={p.id} className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">
-                {p.displayName}
-              </li>
-            ))}
-          </ul>
-        )}
-      </Panel>
-
-      {/* Concept column */}
-      <Panel>
-        <h2 className="mb-3 text-lg font-bold">{t("lobby.concept")}</h2>
-        {concepts === null ? (
-          <Spinner label={t("common.loading")} />
-        ) : (
-          <div className="space-y-3">
-            <select
-              value={selectedId}
-              onChange={(e) => setSelectedId(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-4 py-3"
-            >
-              <option value="">{t("lobby.pickConcept")}</option>
-              {concepts.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.category} — {c.title}
-                </option>
-              ))}
-            </select>
-            {selected ? (
-              <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{selected.explanation}</p>
-            ) : null}
-            {showForm ? (
-              <ConceptForm onCreate={onCreateConcept} onCancel={() => setShowForm(false)} />
-            ) : (
-              <Button variant="ghost" onClick={() => setShowForm(true)}>
-                + {t("lobby.createConcept")}
-              </Button>
-            )}
+        <div className="w-full border-t border-edge pt-4">
+          <div aria-live="polite" className="flex items-center gap-2">
+            <UsersIcon className="text-ink-muted" />
+            <SectionLabel>
+              {t("lobby.participants")} · {participants.length}
+            </SectionLabel>
           </div>
-        )}
+          {participants.length === 0 ? (
+            <EmptyState>{t("lobby.noParticipants")}</EmptyState>
+          ) : (
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {participants.map((p) => (
+                <li
+                  key={p.id}
+                  className="animate-rise rounded-full bg-leaf-soft px-3 py-1.5 text-sm font-medium text-leaf-deep"
+                >
+                  {p.displayName}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </Panel>
 
-      {/* Settings + start column */}
-      <Panel className="flex flex-col gap-4">
-        <h2 className="text-lg font-bold">{t("lobby.settings")}</h2>
-        <SettingsForm settings={settings} onChange={setSettings} maxImpostors={Math.max(1, participants.length - 1)} />
+      {/* Preparation zone */}
+      <Panel className="flex flex-col gap-4 self-start lg:col-span-2">
+        <h2 className="font-display text-xl font-bold text-ink">{t("lobby.prepare")}</h2>
+
+        <div>
+          <SectionLabel className="mb-2">{t("lobby.concept")}</SectionLabel>
+          {concepts === null ? (
+            <Spinner label={t("common.loading")} />
+          ) : (
+            <div className="space-y-3">
+              <Select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
+                <option value="">{t("lobby.pickConcept")}</option>
+                {concepts.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.category} — {c.title}
+                  </option>
+                ))}
+              </Select>
+              {selected ? (
+                <p className="rounded-lg bg-paper p-3 text-sm text-ink-secondary">{selected.explanation}</p>
+              ) : null}
+              <Disclosure summary={t("lobby.createConcept")}>
+                <ConceptForm onCreate={onCreateConcept} />
+              </Disclosure>
+            </div>
+          )}
+        </div>
+
+        <Disclosure summary={t("lobby.settings")}>
+          <SettingsForm settings={settings} onChange={setSettings} maxImpostors={Math.max(1, participants.length - 1)} />
+        </Disclosure>
+
         <ErrorText>{error}</ErrorText>
-        <Button onClick={onStart} disabled={starting}>
+        <Button size="lg" onClick={onStart} disabled={starting}>
           {t("lobby.start")}
         </Button>
       </Panel>

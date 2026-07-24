@@ -19,7 +19,39 @@ const dict = {
     "common.error": "Algo salió mal. Inténtalo de nuevo.",
     "lang.toggle": "EN",
 
+    // navigation
+    "nav.menu": "Menú",
+    "nav.home": "Inicio",
+    "nav.howto": "Cómo se juega",
+    "nav.leaveRoom": "Salir de la sala",
+    "a11y.openMenu": "Abrir menú",
+    "a11y.closeMenu": "Cerrar menú",
+
+    // how to play
+    "howto.title": "Cómo se juega",
+    "howto.step1": "El profesor crea una sala y proyecta el código QR.",
+    "howto.step2": "Cada estudiante recibe una tarjeta privada: casi todos ven el mismo concepto, el impostor no.",
+    "howto.step3": "La clase discute el concepto y el impostor disimula.",
+    "howto.step4": "Todos votan y se revela quién era, junto con la explicación del concepto.",
+
+    // phases
+    "phase.lobby": "Sala",
+    "phase.card_reveal": "Tarjetas",
+    "phase.discussion": "Discusión",
+    "phase.voting": "Votación",
+    "phase.results": "Resultados",
+
+    // confirmations
+    "reset.title": "¿Nueva ronda?",
+    "reset.body": "Se descartan los roles y votos de esta ronda. Los participantes se mantienen.",
+    "reset.confirm": "Sí, nueva ronda",
+    "leave.title": "¿Salir de la sala?",
+    "leave.body": "Dejarás la partida y tendrás que volver a unirte con el código.",
+    "leave.confirm": "Salir",
+
     // landing
+    "landing.title": "Hay un impostor en la clase",
+    "landing.lead": "Un juego de deducción para repasar conceptos: toda la clase recibe el mismo concepto, menos una persona.",
     "landing.createRoom": "Crear sala",
     "landing.createRoomDesc": "Para el profesor: crea una sala y proyecta el código.",
     "landing.joinRoom": "Unirse a una sala",
@@ -38,6 +70,9 @@ const dict = {
     "lobby.scanToJoin": "Escanea para unirte",
     "lobby.roomCode": "Código de sala",
     "lobby.joinUrl": "Enlace para unirse",
+    "lobby.copyLink": "Copiar enlace",
+    "lobby.copied": "Enlace copiado",
+    "lobby.prepare": "Preparar la ronda",
     "lobby.participants": "Participantes",
     "lobby.noParticipants": "Aún no se ha unido nadie.",
     "lobby.concept": "Concepto educativo",
@@ -116,7 +151,7 @@ const dict = {
     "wait.joinedAs": "Te uniste como",
 
     // student card
-    "card.tapToReveal": "Toca para ver tu tarjeta",
+    "card.tapToReveal": "Mostrar mi tarjeta",
     "card.holdNote": "Mantenla privada. Se oculta si cambias de pestaña.",
     "card.youAre": "Eres",
     "card.role.student": "Estudiante",
@@ -125,7 +160,7 @@ const dict = {
     "card.category": "Categoría",
     "card.hint": "Pista",
     "card.impostorMsg": "Eres el impostor. Disimula y descubre el concepto.",
-    "card.hide": "Ocultar",
+    "card.hide": "Ocultar tarjeta",
     "card.hiddenAuto": "Tarjeta oculta automáticamente.",
     "card.hiddenAway": "Tarjeta oculta porque saliste de la pestaña.",
 
@@ -157,6 +192,34 @@ const dict = {
     "common.error": "Something went wrong. Try again.",
     "lang.toggle": "ES",
 
+    "nav.menu": "Menu",
+    "nav.home": "Home",
+    "nav.howto": "How to play",
+    "nav.leaveRoom": "Leave room",
+    "a11y.openMenu": "Open menu",
+    "a11y.closeMenu": "Close menu",
+
+    "howto.title": "How to play",
+    "howto.step1": "The teacher creates a room and projects the QR code.",
+    "howto.step2": "Each student gets a private card: almost everyone sees the same concept — the impostor doesn't.",
+    "howto.step3": "The class discusses the concept while the impostor blends in.",
+    "howto.step4": "Everyone votes, then the impostor and the concept's explanation are revealed.",
+
+    "phase.lobby": "Lobby",
+    "phase.card_reveal": "Cards",
+    "phase.discussion": "Discussion",
+    "phase.voting": "Voting",
+    "phase.results": "Results",
+
+    "reset.title": "New round?",
+    "reset.body": "Roles and votes from this round are discarded. Participants stay.",
+    "reset.confirm": "Yes, new round",
+    "leave.title": "Leave the room?",
+    "leave.body": "You'll leave the game and need to rejoin with the code.",
+    "leave.confirm": "Leave",
+
+    "landing.title": "There's an impostor in class",
+    "landing.lead": "A deduction game for reviewing concepts: the whole class gets the same concept — except one person.",
     "landing.createRoom": "Create room",
     "landing.createRoomDesc": "For the teacher: create a room and project the code.",
     "landing.joinRoom": "Join a room",
@@ -173,6 +236,9 @@ const dict = {
     "lobby.scanToJoin": "Scan to join",
     "lobby.roomCode": "Room code",
     "lobby.joinUrl": "Join link",
+    "lobby.copyLink": "Copy link",
+    "lobby.copied": "Link copied",
+    "lobby.prepare": "Set up the round",
     "lobby.participants": "Participants",
     "lobby.noParticipants": "No one has joined yet.",
     "lobby.concept": "Educational concept",
@@ -242,7 +308,7 @@ const dict = {
     "wait.desc": "Wait for the teacher to start the round.",
     "wait.joinedAs": "You joined as",
 
-    "card.tapToReveal": "Tap to see your card",
+    "card.tapToReveal": "Show my card",
     "card.holdNote": "Keep it private. It hides if you switch tabs.",
     "card.youAre": "You are",
     "card.role.student": "Student",
@@ -251,7 +317,7 @@ const dict = {
     "card.category": "Category",
     "card.hint": "Hint",
     "card.impostorMsg": "You are the impostor. Blend in and discover the concept.",
-    "card.hide": "Hide",
+    "card.hide": "Hide card",
     "card.hiddenAuto": "Card hidden automatically.",
     "card.hiddenAway": "Card hidden because you left the tab.",
 

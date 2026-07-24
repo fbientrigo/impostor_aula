@@ -1,10 +1,13 @@
 "use client";
 
+// Landing: one screen, two roles. Students (the majority of visitors) get the
+// big code entry first; the teacher's "create room" panel sits below, quieter.
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel, TextInput } from "@/components/ui";
+import { Button, Field, Panel, TextInput } from "@/components/ui";
 import { CreateRoomScreen } from "@/components/teacher/CreateRoomScreen";
 import { isValidRoomCode } from "@/lib/roomCode";
 
@@ -26,27 +29,41 @@ export default function LandingPage() {
   return (
     <main className="min-h-dvh">
       <AppHeader />
-      <div className="mx-auto grid w-full max-w-4xl gap-6 px-4 py-8 md:grid-cols-2">
-        <CreateRoomScreen />
+      <div className="mx-auto w-full max-w-md px-4 pb-12 pt-6 sm:pt-10">
+        <div className="animate-rise text-center">
+          <h1 className="font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
+            {t("landing.title")}
+          </h1>
+          <p className="mx-auto mt-2 max-w-sm text-ink-secondary">{t("landing.lead")}</p>
+        </div>
 
-        <Panel className="flex flex-col gap-4">
-          <div>
-            <h2 className="text-xl font-bold">{t("landing.joinRoom")}</h2>
-            <p className="mt-1 text-sm text-slate-500">{t("landing.joinRoomDesc")}</p>
-          </div>
-          <TextInput
-            inputMode="numeric"
-            placeholder={t("landing.codePlaceholder")}
-            value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 5))}
-            onKeyDown={(e) => e.key === "Enter" && onJoin()}
-            className="text-center font-mono text-2xl tracking-[0.3em]"
-          />
-          <Button variant="secondary" onClick={onJoin}>
+        <Panel className="mt-8 flex flex-col gap-4">
+          <h2 className="font-display text-xl font-bold text-ink">{t("landing.joinRoom")}</h2>
+          <Field label={t("landing.joinRoomDesc")} error={error}>
+            {(a11y) => (
+              <TextInput
+                {...a11y}
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="00000"
+                value={code}
+                onChange={(e) => {
+                  setError("");
+                  setCode(e.target.value.replace(/\D/g, "").slice(0, 5));
+                }}
+                onKeyDown={(e) => e.key === "Enter" && onJoin()}
+                className="text-center font-mono text-3xl tracking-[0.3em]"
+              />
+            )}
+          </Field>
+          <Button size="lg" onClick={onJoin}>
             {t("landing.join")}
           </Button>
-          <ErrorText>{error}</ErrorText>
         </Panel>
+
+        <div className="mt-6">
+          <CreateRoomScreen />
+        </div>
       </div>
     </main>
   );

@@ -5,6 +5,7 @@
 // the relevant GET route. The payload is intentionally trivial — never the data
 // itself — so nothing sensitive travels over the anon-key realtime connection.
 
+import { getServerSupabaseConfig } from "./supabase/serverEnv";
 import type { RoomEvent } from "./types";
 
 export function roomChannelName(code: string): string {
@@ -17,9 +18,13 @@ export function roomChannelName(code: string): string {
  * the API request (realtime is a convenience layer; clients also poll).
  */
 export async function broadcastRoomEvent(code: string, event: RoomEvent): Promise<void> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return;
+  let config;
+  try {
+    config = getServerSupabaseConfig();
+  } catch {
+    return; // realtime is a convenience layer; clients also poll
+  }
+  const { url, serviceKey } = config;
 
   try {
     await fetch(`${url}/realtime/v1/api/broadcast`, {

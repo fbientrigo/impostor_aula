@@ -2,11 +2,12 @@
 
 // Privacy-aware role card. The card is fetched lazily on first reveal (which also
 // marks it "seen" server-side) and hidden automatically on tab switch / blur and,
-// if configured, after a countdown.
+// if configured, after a countdown. The impostor card differs from the student
+// card by color, icon AND label — never color alone.
 
 import { useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText } from "@/components/ui";
+import { Button, ErrorText, EyeIcon, EyeOffIcon, LeafIcon, SearchIcon } from "@/components/ui";
 import { useCardVisibility } from "@/hooks/useCardVisibility";
 import { getCard } from "@/lib/client";
 import type { ParticipantIdentity } from "@/lib/storage";
@@ -46,10 +47,11 @@ export function CardViewer({ code, identity, autoHideSeconds, revealLabel }: Pro
   if (!visible || !card) {
     return (
       <div className="flex flex-col items-center gap-4">
-        <Button onClick={onReveal} disabled={loading} className="px-8 py-6 text-xl">
+        <Button size="lg" onClick={onReveal} disabled={loading} className="px-10 py-5 text-xl">
+          <EyeIcon />
           {loading ? t("common.loading") : revealLabel}
         </Button>
-        <p className="max-w-xs text-center text-sm text-slate-400">{t("card.holdNote")}</p>
+        <p className="max-w-xs text-center text-sm text-ink-muted">{t("card.holdNote")}</p>
         <ErrorText>{error}</ErrorText>
       </div>
     );
@@ -60,33 +62,39 @@ export function CardViewer({ code, identity, autoHideSeconds, revealLabel }: Pro
   return (
     <div className="w-full max-w-sm">
       <div
-        className={`rounded-3xl p-8 text-center shadow-lg ${
-          isImpostor ? "bg-rose-600 text-white" : "bg-brand-600 text-white"
+        className={`animate-card-reveal rounded-2xl p-7 text-center text-white shadow-lg ${
+          isImpostor ? "bg-coral" : "bg-leaf"
         }`}
       >
-        <p className="text-sm font-semibold uppercase tracking-wide opacity-80">{t("card.youAre")}</p>
-        <p className="mt-1 text-3xl font-extrabold">
+        <span
+          aria-hidden
+          className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/15"
+        >
+          {isImpostor ? <SearchIcon width={26} height={26} /> : <LeafIcon width={26} height={26} />}
+        </span>
+        <p className="mt-3 text-sm font-semibold uppercase tracking-widest opacity-80">{t("card.youAre")}</p>
+        <p className="font-display text-3xl font-bold">
           {t(isImpostor ? "card.role.impostor" : "card.role.student")}
         </p>
 
         {card.role === "student" ? (
-          <div className="mt-6">
-            <p className="text-xs uppercase tracking-wide opacity-80">{t("card.concept")}</p>
-            <p className="text-2xl font-bold">{card.title}</p>
+          <div className="mt-6 rounded-xl bg-white/10 p-4">
+            <p className="text-xs uppercase tracking-widest opacity-80">{t("card.concept")}</p>
+            <p className="font-display text-2xl font-bold">{card.title}</p>
             <p className="mt-2 text-sm opacity-90">
               {t("card.category")}: {card.category}
             </p>
           </div>
         ) : (
-          <div className="mt-6 space-y-2">
-            <p className="text-sm opacity-90">{t("card.impostorMsg")}</p>
+          <div className="mt-6 space-y-2 rounded-xl bg-white/10 p-4">
+            <p className="text-sm opacity-95">{t("card.impostorMsg")}</p>
             {card.category ? (
               <p className="text-base font-semibold">
                 {t("card.category")}: {card.category}
               </p>
             ) : null}
             {card.hint ? (
-              <p className="text-sm opacity-90">
+              <p className="text-sm opacity-95">
                 {t("card.hint")}: {card.hint}
               </p>
             ) : null}
@@ -96,9 +104,14 @@ export function CardViewer({ code, identity, autoHideSeconds, revealLabel }: Pro
 
       <div className="mt-4 flex flex-col items-center gap-2">
         <Button variant="secondary" onClick={hide}>
+          <EyeOffIcon />
           {t("card.hide")}
         </Button>
-        {secondsLeft !== null ? <p className="text-sm text-slate-400">{secondsLeft}s</p> : null}
+        {secondsLeft !== null ? (
+          <p className="text-sm tabular-nums text-ink-muted" aria-live="off">
+            {secondsLeft}s
+          </p>
+        ) : null}
       </div>
     </div>
   );

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel, TextInput } from "@/components/ui";
+import { Button, Field, Panel, TextInput } from "@/components/ui";
+import { RoomCodeBadge } from "@/components/RoomCodeBadge";
 import { joinRoom } from "@/lib/client";
 import { setParticipant, type ParticipantIdentity } from "@/lib/storage";
 
@@ -34,18 +35,26 @@ export function JoinRoomScreen({ code, onJoined }: Props) {
   }
 
   return (
-    <Panel className="mx-auto flex max-w-sm flex-col gap-4">
-      <h2 className="text-xl font-bold">{t("join.title")}</h2>
-      <TextInput
-        placeholder={t("join.namePlaceholder")}
-        value={name}
-        maxLength={40}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && submit()}
-        autoFocus
-      />
-      <ErrorText>{error}</ErrorText>
-      <Button onClick={submit} disabled={busy}>
+    <Panel className="mx-auto flex max-w-sm animate-rise flex-col gap-5">
+      <RoomCodeBadge code={code} size="md" />
+      <h2 className="text-center font-display text-xl font-bold text-ink">{t("join.title")}</h2>
+      <Field label={t("join.namePlaceholder")} error={error}>
+        {(a11y) => (
+          <TextInput
+            {...a11y}
+            value={name}
+            maxLength={40}
+            autoComplete="off"
+            onChange={(e) => {
+              setError("");
+              setName(e.target.value);
+            }}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
+            autoFocus
+          />
+        )}
+      </Field>
+      <Button size="lg" onClick={submit} disabled={busy || !name.trim()} aria-live="polite">
         {busy ? t("join.joining") : t("join.join")}
       </Button>
     </Panel>

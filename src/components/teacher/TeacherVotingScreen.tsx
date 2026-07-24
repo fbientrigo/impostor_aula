@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Panel } from "@/components/ui";
+import { Button, ErrorText, Panel, ScreenTitle, SectionLabel } from "@/components/ui";
 import { AwayAlerts } from "@/components/AwayAlerts";
 import { getVotes, setPhase, type RosterEntry } from "@/lib/client";
 
@@ -63,40 +63,46 @@ export function TeacherVotingScreen({ code, hostToken, participants, onChanged }
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <Panel className="lg:col-span-2">
-        <h2 className="text-xl font-bold">{t("voting.title")}</h2>
-        <p className="mt-1 text-slate-500">{t("voting.desc")}</p>
-        <p className="mt-2 text-sm font-medium text-slate-600">
+        <ScreenTitle sub={t("voting.desc")}>{t("voting.title")}</ScreenTitle>
+        <p aria-live="polite" className="mt-3 text-sm font-medium text-ink-secondary">
           {t("voting.votesIn")}: {total}/{participants.length}
         </p>
 
-        <h3 className="mt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">{t("voting.liveTally")}</h3>
+        <SectionLabel className="mt-5">{t("voting.liveTally")}</SectionLabel>
         <ul className="mt-2 space-y-2">
           {sorted.map((p) => {
             const c = counts[p.id] ?? 0;
             return (
               <li key={p.id} className="flex items-center gap-3">
-                <span className="w-32 shrink-0 truncate text-sm font-medium">{p.displayName}</span>
-                <span className="h-3 flex-1 overflow-hidden rounded-full bg-slate-100">
-                  <span className="block h-full rounded-full bg-brand-500" style={{ width: `${(c / max) * 100}%` }} />
+                <span className="w-32 shrink-0 truncate text-sm font-medium text-ink">{p.displayName}</span>
+                <span className="h-3 flex-1 overflow-hidden rounded-full bg-paper">
+                  <span
+                    className="block h-full rounded-full bg-leaf transition-[width] duration-300"
+                    style={{ width: `${(c / max) * 100}%` }}
+                  />
                 </span>
-                <span className="w-6 text-right text-sm tabular-nums text-slate-600">{c}</span>
+                <span className="w-6 text-right text-sm tabular-nums text-ink-secondary">{c}</span>
               </li>
             );
           })}
         </ul>
 
         <ErrorText>{error}</ErrorText>
-        <div className="mt-6 flex gap-3">
-          <Button variant="secondary" onClick={() => setPhase(code, hostToken, "discussion").then(onChanged)} disabled={busy}>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button
+            variant="ghost"
+            onClick={() => setPhase(code, hostToken, "discussion").then(onChanged)}
+            disabled={busy}
+          >
             {t("round.back")}
           </Button>
-          <Button onClick={reveal} disabled={busy}>
+          <Button size="lg" onClick={reveal} disabled={busy}>
             {t("voting.reveal")}
           </Button>
         </div>
       </Panel>
 
-      <Panel>
+      <Panel className="self-start">
         <AwayAlerts participants={participants} />
       </Panel>
     </div>

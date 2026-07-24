@@ -1,18 +1,17 @@
 "use client";
 
-// Inline form to author a new concept from the lobby.
+// Inline form to author a new concept, shown inside a disclosure in the lobby.
 
 import { useState } from "react";
 import { useLang } from "@/components/LangProvider";
-import { Button, ErrorText, Label, TextInput } from "@/components/ui";
+import { Button, ErrorText, Label, Select, TextArea, TextInput } from "@/components/ui";
 import type { Concept, Difficulty } from "@/lib/types";
 
 interface Props {
   onCreate: (concept: Omit<Concept, "id">) => Promise<void>;
-  onCancel: () => void;
 }
 
-export function ConceptForm({ onCreate, onCancel }: Props) {
+export function ConceptForm({ onCreate }: Props) {
   const { t } = useLang();
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
@@ -44,66 +43,59 @@ export function ConceptForm({ onCreate, onCancel }: Props) {
           .map((s) => s.trim())
           .filter(Boolean),
       });
+      setCategory("");
+      setTitle("");
+      setExplanation("");
+      setImpostorHint("");
+      setTeacherNotes("");
+      setTags("");
     } catch {
       setError(t("common.error"));
+    } finally {
       setSaving(false);
     }
   }
 
   return (
-    <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <div className="space-y-3">
       <div>
         <Label>{t("conceptForm.category")}</Label>
-        <TextInput value={category} onChange={(e) => setCategory(e.target.value)} />
+        <TextInput className="text-base" value={category} onChange={(e) => setCategory(e.target.value)} />
       </div>
       <div>
         <Label>{t("conceptForm.titleField")}</Label>
-        <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+        <TextInput className="text-base" value={title} onChange={(e) => setTitle(e.target.value)} />
       </div>
       <div>
         <Label>{t("conceptForm.explanation")}</Label>
-        <textarea
-          value={explanation}
-          onChange={(e) => setExplanation(e.target.value)}
-          rows={3}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200"
-        />
+        <TextArea value={explanation} onChange={(e) => setExplanation(e.target.value)} rows={3} />
       </div>
       <div>
         <Label>{t("conceptForm.impostorHint")}</Label>
-        <TextInput value={impostorHint} onChange={(e) => setImpostorHint(e.target.value)} />
+        <TextInput className="text-base" value={impostorHint} onChange={(e) => setImpostorHint(e.target.value)} />
       </div>
       <div>
         <Label>{t("conceptForm.teacherNotes")}</Label>
-        <TextInput value={teacherNotes} onChange={(e) => setTeacherNotes(e.target.value)} />
+        <TextInput className="text-base" value={teacherNotes} onChange={(e) => setTeacherNotes(e.target.value)} />
       </div>
       <div className="flex gap-3">
         <div className="flex-1">
           <Label>{t("conceptForm.difficulty")}</Label>
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3"
-          >
+          <Select value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)}>
             <option value="basic">{t("difficulty.basic")}</option>
             <option value="intermediate">{t("difficulty.intermediate")}</option>
             <option value="advanced">{t("difficulty.advanced")}</option>
-          </select>
+          </Select>
         </div>
         <div className="flex-1">
           <Label>{t("conceptForm.tags")}</Label>
-          <TextInput value={tags} onChange={(e) => setTags(e.target.value)} />
+          <TextInput className="text-base" value={tags} onChange={(e) => setTags(e.target.value)} />
         </div>
       </div>
       <ErrorText>{error}</ErrorText>
-      <div className="flex gap-2">
-        <Button onClick={submit} disabled={saving}>
-          {t("conceptForm.save")}
-        </Button>
-        <Button variant="ghost" onClick={onCancel} disabled={saving}>
-          {t("common.cancel")}
-        </Button>
-      </div>
+      <Button variant="secondary" onClick={submit} disabled={saving}>
+        {t("conceptForm.save")}
+      </Button>
     </div>
   );
 }
