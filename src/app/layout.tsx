@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <LangProvider>{children}</LangProvider>
         <p
-          className="font-signature pointer-events-none fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-3 z-20 rounded-full border border-edge/80 bg-surface/85 px-3 py-1 text-sm text-leaf-deep shadow-soft backdrop-blur-sm sm:right-5 sm:text-base"
+          className="font-signature pointer-events-none fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] right-3 z-10 bg-paper/80 px-2 py-1 text-xs text-ink-muted backdrop-blur-sm sm:right-4 sm:text-sm"
           aria-label="Profesora Beatriz Mena"
         >
           Profesora Beatriz Mena
