@@ -27,12 +27,15 @@ export function AppHeader({ subtitle, drawerExtras }: { subtitle?: string; drawe
 
   return (
     <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
-      <Link href="/" className="flex items-center gap-2.5">
-        <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-lg bg-leaf-soft text-leaf">
+      <Link href="/" className="flex items-center gap-2.5 rounded-control px-1 py-0.5">
+        <span
+          aria-hidden
+          className="flex h-10 w-10 items-center justify-center rounded-control bg-leaf-soft text-leaf shadow-soft"
+        >
           <LeafIcon />
         </span>
         <span className="flex flex-col leading-tight">
-          <span className="font-display text-lg font-bold text-ink">{t("app.name")}</span>
+          <span className="font-display text-xl text-ink">{t("app.name")}</span>
           <span className="hidden text-xs text-ink-muted sm:inline">{subtitle ?? t("app.tagline")}</span>
         </span>
       </Link>
@@ -42,7 +45,7 @@ export function AppHeader({ subtitle, drawerExtras }: { subtitle?: string; drawe
       </IconButton>
 
       <Drawer open={open} onClose={() => setOpen(false)} title={t("nav.menu")} closeLabel={t("a11y.closeMenu")}>
-        <nav className="flex flex-col gap-1">
+        <nav className="font-handwritten flex flex-col gap-1">
           <DrawerItem
             icon={<HomeIcon />}
             onClick={() => {
@@ -57,7 +60,7 @@ export function AppHeader({ subtitle, drawerExtras }: { subtitle?: string; drawe
 
         <div className="mt-4 border-t border-edge pt-4">
           <SectionLabel className="px-3">{t("howto.title")}</SectionLabel>
-          <ol className="mt-2 list-decimal space-y-2 pl-8 pr-3 text-sm text-ink-secondary">
+          <ol className="font-handwritten mt-2 list-decimal space-y-2 pl-8 pr-3 text-sm text-ink-secondary">
             <li>{t("howto.step1")}</li>
             <li>{t("howto.step2")}</li>
             <li>{t("howto.step3")}</li>
@@ -68,10 +71,10 @@ export function AppHeader({ subtitle, drawerExtras }: { subtitle?: string; drawe
         <div className="mt-4 border-t border-edge pt-3">
           <button
             onClick={() => setLang(lang === "es" ? "en" : "es")}
-            className="flex min-h-11 w-full items-center justify-between rounded-lg px-3 py-2 text-base font-medium text-ink-secondary transition-colors hover:bg-paper hover:text-ink"
+            className="font-handwritten flex min-h-11 w-full items-center justify-between rounded-control px-3 py-2 text-base text-ink-secondary transition-colors hover:bg-paper hover:text-ink"
           >
             <span>Idioma / Language</span>
-            <span className="rounded-md border border-edge-strong px-2 py-0.5 text-sm font-semibold">
+            <span className="rounded-lg border border-edge-strong bg-surface px-2 py-0.5 text-sm">
               {lang === "es" ? "ES" : "EN"}
             </span>
           </button>
