@@ -88,7 +88,7 @@ export default function HostPage() {
   }
 
   return (
-    <main className="min-h-dvh">
+    <main className="app-shell-frame min-h-dvh">
       <AppHeader />
       <div className="mx-auto w-full max-w-5xl px-4 pb-10 pt-2">
         {room ? (

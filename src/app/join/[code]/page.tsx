@@ -97,7 +97,7 @@ export default function JoinPage() {
   }
 
   return (
-    <main className="min-h-dvh">
+    <main className="app-shell-frame min-h-dvh">
       <AppHeader
         drawerExtras={
           identity ? (

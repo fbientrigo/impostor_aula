@@ -33,7 +33,7 @@ export function AppHeader({ subtitle, drawerExtras }: { subtitle?: string; drawe
         </span>
         <span className="flex flex-col leading-tight">
           <span className="font-display text-lg text-ink">{t("app.name")}</span>
-          <span className="hidden text-xs text-ink-muted sm:inline">{subtitle ?? t("app.tagline")}</span>
+          <span className="font-tagline hidden text-xs text-ink-muted sm:inline">{subtitle ?? t("app.tagline")}</span>
         </span>
       </Link>
 

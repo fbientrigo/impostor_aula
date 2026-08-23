@@ -51,6 +51,7 @@ const config: Config = {
       animation: {
         rise: "rise 240ms ease-out both",
         "card-reveal": "card-reveal 200ms ease-out both",
+        "card-deal": "card-deal 460ms cubic-bezier(0.22, 1, 0.36, 1) both",
         "soft-pulse": "soft-pulse 2s ease-in-out infinite",
       },
     },
