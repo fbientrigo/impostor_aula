@@ -43,9 +43,9 @@ describe("countVotes", () => {
 
 describe("tallyResults", () => {
   const participants: Participant[] = [
-    { id: "x", roomId: "r", displayName: "Ana", role: "impostor", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "" },
-    { id: "y", roomId: "r", displayName: "Beto", role: "student", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "" },
-    { id: "z", roomId: "r", displayName: "Caro", role: "student", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "" },
+    { id: "x", roomId: "r", displayName: "Ana", role: "impostor", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "", isBot: false, botDifficulty: null },
+    { id: "y", roomId: "r", displayName: "Beto", role: "student", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "", isBot: false, botDifficulty: null },
+    { id: "z", roomId: "r", displayName: "Caro", role: "student", hasSeenCard: true, awayCount: 0, reloadedCount: 0, joinedAt: "", isBot: false, botDifficulty: null },
   ];
 
   it("sorts by votes desc and flags a caught impostor", () => {

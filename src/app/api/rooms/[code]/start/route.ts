@@ -34,19 +34,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ code: s
     // Load participants and validate the impostor count for this group size.
     const { data: parts, error: pErr } = await ctx.supabase
       .from("participants")
-      .select("id")
+      .select("id, is_bot")
       .eq("room_id", ctx.room.id);
     if (pErr) throw pErr;
     const ids = (parts ?? []).map((p) => p.id);
+    const isBotById = new Map((parts ?? []).map((p) => [p.id as string, !!p.is_bot]));
 
     const valid = validateImpostorCount(settings.impostorCount, ids.length);
     if (!valid.ok) return fail(valid.error!, 400);
 
-    // Assign roles and persist them.
+    // Assign roles and persist them. Bots count toward room size and can become
+    // impostor like anyone else. Bots never view a card, so they start "seen"
+    // (keeps the teacher's seen-card tally honest); humans reset to unseen.
     const roles = assignRoles(ids, settings.impostorCount);
     await Promise.all(
       Object.entries(roles).map(([id, role]) =>
-        ctx.supabase.from("participants").update({ role, has_seen_card: false }).eq("id", id),
+        ctx.supabase
+          .from("participants")
+          .update({ role, has_seen_card: isBotById.get(id) ?? false })
+          .eq("id", id),
       ),
     );
 

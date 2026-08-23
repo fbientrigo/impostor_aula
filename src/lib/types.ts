@@ -13,6 +13,9 @@ export type Role = "student" | "impostor";
 
 export type Difficulty = "basic" | "intermediate" | "advanced";
 
+/** Bot skill band. Purely a probability knob (see src/lib/bots.ts). */
+export type BotDifficulty = "easy" | "medium" | "hard";
+
 export interface RoomSettings {
   impostorCount: number;
   showCategoryToImpostor: boolean;
@@ -41,6 +44,8 @@ export interface Concept {
   teacherNotes?: string;
   difficulty: Difficulty;
   tags: string[];
+  /** Pre-authored, server-only bot response pools. Never sent to students. */
+  botResponses?: import("./botResponses").ResponsePool;
 }
 
 export interface Participant {
@@ -52,6 +57,10 @@ export interface Participant {
   awayCount: number;
   reloadedCount: number;
   joinedAt: string;
+  /** Server-controlled bot? Humans are false. */
+  isBot: boolean;
+  /** Skill band for bots; null for humans. */
+  botDifficulty: BotDifficulty | null;
 }
 
 export interface Vote {

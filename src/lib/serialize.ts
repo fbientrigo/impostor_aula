@@ -41,6 +41,8 @@ export function rowToParticipant(row: any): Participant {
     awayCount: row.away_count,
     reloadedCount: row.reloaded_count,
     joinedAt: row.joined_at,
+    isBot: row.is_bot ?? false,
+    botDifficulty: row.bot_difficulty ?? null,
   };
 }
 
