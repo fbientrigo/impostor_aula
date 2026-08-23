@@ -1,6 +1,6 @@
 // POST /api/rooms/[code]/reset — host starts a fresh round: clears votes, resets
-// roles/seen-card, and returns the room to the lobby (keeping the participants).
-// Host only.
+// roles/seen-card, clears any classroom timer, and returns the room to the lobby
+// while keeping the same participants. Host only.
 
 import { handler, ok, fail, loadRoom, isHost } from "@/lib/api";
 import { broadcastRoomEvent } from "@/lib/realtime";
@@ -17,9 +17,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ code: s
       .from("participants")
       .update({ role: "student", has_seen_card: false })
       .eq("room_id", ctx.room.id);
+
+    const settings = {
+      ...ctx.room.settings,
+      timerEndsAt: null,
+      timerDurationSeconds: null,
+    };
+
     const { error } = await ctx.supabase
       .from("rooms")
-      .update({ status: "lobby", concept_id: null })
+      .update({ status: "lobby", concept_id: null, settings })
       .eq("id", ctx.room.id);
     if (error) throw error;
 

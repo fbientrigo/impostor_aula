@@ -1,7 +1,16 @@
 // Typed browser -> API helpers. Each function attaches the right auth headers and
 // throws an Error(code) on failure so callers can map the code to a message.
 
-import type { BotDifficulty, CardPayload, Concept, Role, Room, RoomSettings, RoomStatus } from "./types";
+import type {
+  BotDifficulty,
+  CardPayload,
+  Concept,
+  Role,
+  Room,
+  RoomSettings,
+  RoomStatus,
+  TimerDurationSeconds,
+} from "./types";
 
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
@@ -125,6 +134,22 @@ export function setPhase(code: string, hostToken: string, to: RoomStatus) {
     headers: { ...jsonHeaders, ...hostHeaders(hostToken) },
     body: JSON.stringify({ to }),
   });
+}
+
+export function setRoomTimer(
+  code: string,
+  hostToken: string,
+  action: "start" | "stop",
+  durationSeconds?: TimerDurationSeconds,
+) {
+  return call<{ timerEndsAt: string | null; timerDurationSeconds: TimerDurationSeconds | null }>(
+    `/api/rooms/${code}/timer`,
+    {
+      method: "POST",
+      headers: { ...jsonHeaders, ...hostHeaders(hostToken) },
+      body: JSON.stringify({ action, durationSeconds }),
+    },
+  );
 }
 
 export function resetRoom(code: string, hostToken: string) {
