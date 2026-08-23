@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { RoundTimerOverlay } from "@/components/RoundTimerOverlay";
 import { Panel, PhaseIndicator, Spinner } from "@/components/ui";
 import { useLang } from "@/components/LangProvider";
 import { useRoomChannel } from "@/hooks/useRoomChannel";
@@ -17,6 +18,7 @@ import { PHASE_STEPS, phaseStepIndex } from "@/lib/presentation";
 import type { Concept } from "@/lib/types";
 import { TeacherLobbyScreen } from "@/components/teacher/TeacherLobbyScreen";
 import { TeacherRoundControlScreen } from "@/components/teacher/TeacherRoundControlScreen";
+import { TeacherTimerControls } from "@/components/teacher/TeacherTimerControls";
 import { TeacherVotingScreen } from "@/components/teacher/TeacherVotingScreen";
 import { TeacherResultsScreen } from "@/components/teacher/TeacherResultsScreen";
 
@@ -87,6 +89,9 @@ export default function HostPage() {
     body = <TeacherResultsScreen code={code} hostToken={hostToken} onChanged={refresh} />;
   }
 
+  const timerAvailable =
+    !!room && (room.status === "card_reveal" || room.status === "discussion" || room.status === "voting");
+
   return (
     <main className="app-shell-frame min-h-dvh">
       <AppHeader />
@@ -99,8 +104,23 @@ export default function HostPage() {
             />
           </div>
         ) : null}
+
+        {timerAvailable && hostToken ? (
+          <TeacherTimerControls code={code} hostToken={hostToken} onChanged={refresh} />
+        ) : null}
+
         {body}
       </div>
+
+      {room && hostToken ? (
+        <RoundTimerOverlay
+          endsAt={room.settings.timerEndsAt}
+          durationSeconds={room.settings.timerDurationSeconds}
+          code={code}
+          hostToken={hostToken}
+          onChanged={refresh}
+        />
+      ) : null}
     </main>
   );
 }
