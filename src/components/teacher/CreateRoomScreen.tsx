@@ -32,7 +32,7 @@ export function CreateRoomScreen() {
 
   return (
     <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-edge-strong p-5 text-center">
-      <p className="text-sm text-ink-secondary">{t("landing.createRoomDesc")}</p>
+      <p className="font-description text-sm text-ink-secondary">{t("landing.createRoomDesc")}</p>
       <Button variant="secondary" onClick={onCreate} disabled={creating}>
         {creating ? t("create.creating") : t("landing.createRoom")}
       </Button>

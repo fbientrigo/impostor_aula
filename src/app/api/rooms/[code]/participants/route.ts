@@ -25,6 +25,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ code: s
       awayCount: p.away_count,
       reloadedCount: p.reloaded_count,
       joinedAt: p.joined_at,
+      isBot: p.is_bot ?? false,
+      botDifficulty: p.bot_difficulty ?? null,
       ...(revealRoles ? { role: p.role } : {}),
     }));
 

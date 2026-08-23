@@ -27,19 +27,19 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-dvh">
+    <main className="app-shell-frame min-h-dvh">
       <AppHeader />
       <div className="mx-auto w-full max-w-md px-4 pb-12 pt-6 sm:pt-10">
         <div className="animate-rise text-center">
           <h1 className="font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
             {t("landing.title")}
           </h1>
-          <p className="mx-auto mt-2 max-w-sm text-ink-secondary">{t("landing.lead")}</p>
+          <p className="font-description mx-auto mt-2 max-w-sm text-ink-secondary">{t("landing.lead")}</p>
         </div>
 
         <Panel className="mt-8 flex flex-col gap-4">
           <h2 className="font-display text-xl font-bold text-ink">{t("landing.joinRoom")}</h2>
-          <Field label={t("landing.joinRoomDesc")} error={error}>
+          <Field label={<span className="font-description">{t("landing.joinRoomDesc")}</span>} error={error}>
             {(a11y) => (
               <TextInput
                 {...a11y}

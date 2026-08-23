@@ -94,6 +94,30 @@ src/lib/presentation.ts       pure formatting helpers (phase step index,
 - Drawer is the nav pattern at every width (no separate desktop nav bar) to
   keep one navigation implementation to maintain.
 
+## Decorative corner frame (desktop only)
+
+- `src/components/DecorativeFrame.tsx` renders four flower PNGs
+  (`src/assets/flower_{topleft,topright,botleft,botright}.png`) pinned to the
+  viewport corners as a purely decorative frame. It is mounted once in
+  `src/app/layout.tsx`, before the app content, so it covers every route.
+- Desktop only: the wrapper is `hidden lg:block`, so nothing renders (or is
+  downloaded, thanks to `next/image` lazy loading) below `lg` (≥1024px). Mobile
+  and tablet layouts are unchanged.
+- It is a visual layer only: `aria-hidden`, empty `alt`, `pointer-events-none`,
+  `select-none`, and pinned at `z-0` so it never intercepts clicks or reaches
+  screen readers. Images are static (no animation), so reduced-motion is a
+  no-op here.
+- Content clearance is handled by the `.app-shell-frame` class in
+  `src/app/globals.css`, applied to each page's top-level `<main>`. It creates a
+  stacking context (`relative z-[1]`) so content paints above the frame, and
+  adds symmetric `lg:`/`xl:` padding so the header, content, and signature clear
+  the corner flowers. All insets are behind `lg:`/`xl:`, so they never affect
+  mobile.
+- **To change flower size** → the `w-36 xl:w-56` classes in
+  `DecorativeFrame.tsx` (height follows via `h-auto`). Keep the
+  `.app-shell-frame` padding in `globals.css` a bit larger than the flower it
+  clears (currently `lg:px-40` clears `w-36`, `xl:px-60` clears `xl:w-56`).
+
 ## Accessibility rules
 
 - Every icon-only control uses `IconButton` (mandatory `label` prop) or has an
@@ -121,3 +145,5 @@ src/lib/presentation.ts       pure formatting helpers (phase step index,
   (projection zone vs. preparation zone split).
 - **Student role card** → `src/components/student/CardViewer.tsx`.
 - **Reusable copy / Spanish strings** → `src/lib/i18n.ts`.
+- **Desktop corner frame** → flower size in `src/components/DecorativeFrame.tsx`;
+  content inset in the `.app-shell-frame` class in `src/app/globals.css`.

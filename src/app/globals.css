@@ -1,6 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Playwrite+CL&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Annotation Mono v0.4 — SIL Open Font License 1.1.
+   Pinned to a release so deploys remain deterministic. */
+@font-face {
+  font-family: "Annotation Mono";
+  src: url("https://cdn.jsdelivr.net/gh/qwerasd205/AnnotationMono@v0.4/dist/variable_woff2/AnnotationMono-VF.woff2")
+    format("woff2");
+  font-weight: 100 1000;
+  font-style: oblique -15deg 0deg;
+  font-display: swap;
+}
 
 /* Design tokens — "cuaderno de laboratorio".
    Warm paper neutrals, deep teal-green actions, coral reserved for the
@@ -40,10 +52,69 @@
 
   /* Focus */
   --color-ring: #14695d;
+
+  /* Typography */
+  --font-title: "Dancing Script";
+  --font-menu: "Kalam";
+  --font-description: "Patrick Hand";
+  --font-tagline: "Caveat";
+  --font-signature: "Great Vibes";
 }
 
 body {
   @apply bg-paper text-ink antialiased;
+}
+
+/* Desktop-only inset for the decorative corner frame (see DecorativeFrame.tsx).
+   Applied to each page's top-level <main>. Creates a stacking context so
+   content paints above the z-0 flower frame, and adds symmetric padding at
+   lg/xl so the header, content, and signature clear the corner flowers. Mobile
+   and tablet (below lg) are untouched. Keep these paddings in sync with the
+   flower size (w-36 / xl:w-56) in DecorativeFrame.tsx — each padding is a bit
+   larger than the flower it clears. */
+.app-shell-frame {
+  @apply relative z-[1] lg:px-40 lg:py-6 xl:px-60 xl:py-8;
+}
+
+/* Global typography styles for the app. */
+.font-display {
+  font-family: var(--font-title), cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: normal;
+  letter-spacing: -0.025em;
+}
+
+.font-handwritten {
+  font-family: var(--font-menu), cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: normal;
+  letter-spacing: 0;
+}
+
+.font-description {
+  font-family: var(--font-description), cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: normal;
+  letter-spacing: 0;
+}
+
+.font-tagline {
+  font-family: var(--font-tagline), cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: normal;
+  letter-spacing: 0;
+}
+
+.font-signature {
+  font-family: var(--font-signature), cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: normal;
+  letter-spacing: 0;
 }
 
 /* Visible keyboard focus everywhere; mouse clicks stay quiet. */
@@ -93,5 +164,59 @@ body {
   }
   50% {
     opacity: 0.35;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Balatro-style role card. The scene owns the perspective; the inner card owns
+   the pointer tilt (set inline as a transform) and springs back on release.
+   The glare is a soft pointer-tracked highlight. All of this is opt-in via the
+   `--motion` class, and the reduced-motion block below still neutralises any
+   residual transition for users who ask for calm.
+--------------------------------------------------------------------------- */
+.balatro-scene {
+  perspective: 1100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.balatro-card {
+  transform-style: preserve-3d;
+}
+
+.balatro-card--motion {
+  will-change: transform;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.balatro-card__content {
+  position: relative;
+  z-index: 1;
+}
+
+.balatro-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0) 55%
+  );
+  opacity: var(--glare-opacity, 0);
+  transition: opacity 200ms ease;
+}
+
+@keyframes card-deal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.9) rotate(-2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
   }
 }

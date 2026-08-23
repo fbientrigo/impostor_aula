@@ -12,6 +12,7 @@ import { useCardVisibility } from "@/hooks/useCardVisibility";
 import { getCard } from "@/lib/client";
 import type { ParticipantIdentity } from "@/lib/storage";
 import type { CardPayload } from "@/lib/types";
+import { BalatroCard } from "./BalatroCard";
 
 interface Props {
   code: string;
@@ -60,12 +61,8 @@ export function CardViewer({ code, identity, autoHideSeconds, revealLabel }: Pro
   const isImpostor = card.role === "impostor";
 
   return (
-    <div className="w-full max-w-sm">
-      <div
-        className={`animate-card-reveal rounded-2xl p-7 text-center text-white shadow-lg ${
-          isImpostor ? "bg-coral" : "bg-leaf"
-        }`}
-      >
+    <div className="flex w-full max-w-sm flex-col items-center">
+      <BalatroCard tone={isImpostor ? "coral" : "leaf"} className="w-full">
         <span
           aria-hidden
           className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/15"
@@ -100,7 +97,7 @@ export function CardViewer({ code, identity, autoHideSeconds, revealLabel }: Pro
             ) : null}
           </div>
         )}
-      </div>
+      </BalatroCard>
 
       <div className="mt-4 flex flex-col items-center gap-2">
         <Button variant="secondary" onClick={hide}>

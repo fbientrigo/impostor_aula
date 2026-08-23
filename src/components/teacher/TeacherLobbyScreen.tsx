@@ -8,8 +8,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/components/LangProvider";
 import {
+  BotIcon,
   Button,
   CheckIcon,
+  CloseIcon,
   CopyIcon,
   Disclosure,
   EmptyState,
@@ -24,9 +26,10 @@ import { QrCode } from "@/components/QrCode";
 import { RoomCodeBadge } from "@/components/RoomCodeBadge";
 import { SettingsForm } from "@/components/SettingsForm";
 import { ConceptForm } from "./ConceptForm";
-import { createConcept, getConcepts, startRound, type PublicRoom, type RosterEntry } from "@/lib/client";
+import { addBot, createConcept, getConcepts, removeBot, startRound, type PublicRoom, type RosterEntry } from "@/lib/client";
+import { BOT_DIFFICULTIES } from "@/lib/bots";
 import { validateImpostorCount } from "@/lib/roles";
-import type { Concept, RoomSettings } from "@/lib/types";
+import type { BotDifficulty, Concept, RoomSettings } from "@/lib/types";
 
 interface Props {
   code: string;
@@ -45,6 +48,37 @@ export function TeacherLobbyScreen({ code, hostToken, room, participants, onChan
   const [starting, setStarting] = useState(false);
   const [joinUrl, setJoinUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [addingBot, setAddingBot] = useState(false);
+  const [botBusy, setBotBusy] = useState(false);
+
+  const botLabel = (d: BotDifficulty) => t(d === "easy" ? "bot.easy" : d === "medium" ? "bot.medium" : "bot.hard");
+
+  async function onAddBot(difficulty: BotDifficulty) {
+    setBotBusy(true);
+    setError("");
+    try {
+      await addBot(code, hostToken, difficulty);
+      setAddingBot(false);
+      onChanged();
+    } catch {
+      setError(t("common.error"));
+    } finally {
+      setBotBusy(false);
+    }
+  }
+
+  async function onRemoveBot(id: string) {
+    setBotBusy(true);
+    setError("");
+    try {
+      await removeBot(code, hostToken, id);
+      onChanged();
+    } catch {
+      setError(t("common.error"));
+    } finally {
+      setBotBusy(false);
+    }
+  }
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
@@ -132,13 +166,53 @@ export function TeacherLobbyScreen({ code, hostToken, room, participants, onChan
               {participants.map((p) => (
                 <li
                   key={p.id}
-                  className="animate-rise rounded-full bg-leaf-soft px-3 py-1.5 text-sm font-medium text-leaf-deep"
+                  className={`animate-rise flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium ${
+                    p.isBot ? "bg-paper text-ink-secondary ring-1 ring-edge" : "bg-leaf-soft text-leaf-deep"
+                  }`}
                 >
-                  {p.displayName}
+                  {p.isBot ? <BotIcon width={15} height={15} className="text-ink-muted" /> : null}
+                  <span>{p.displayName}</span>
+                  {p.isBot && p.botDifficulty ? (
+                    <span className="rounded-full bg-surface px-1.5 text-[11px] uppercase tracking-wide text-ink-muted">
+                      {botLabel(p.botDifficulty)}
+                    </span>
+                  ) : null}
+                  {p.isBot ? (
+                    <button
+                      type="button"
+                      onClick={() => onRemoveBot(p.id)}
+                      disabled={botBusy}
+                      aria-label={t("lobby.removeBot", { name: p.displayName })}
+                      className="ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-coral-soft hover:text-coral disabled:opacity-40"
+                    >
+                      <CloseIcon width={14} height={14} />
+                    </button>
+                  ) : null}
                 </li>
               ))}
             </ul>
           )}
+
+          <div className="mt-3">
+            {addingBot ? (
+              <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t("lobby.addBot")}>
+                {BOT_DIFFICULTIES.map((d) => (
+                  <Button key={d} size="sm" variant="secondary" disabled={botBusy} onClick={() => onAddBot(d)}>
+                    {botLabel(d)}
+                  </Button>
+                ))}
+                <Button size="sm" variant="ghost" onClick={() => setAddingBot(false)} disabled={botBusy}>
+                  {t("common.cancel")}
+                </Button>
+              </div>
+            ) : (
+              <Button size="sm" variant="secondary" onClick={() => setAddingBot(true)}>
+                <BotIcon width={16} height={16} />
+                {t("lobby.addBot")}
+              </Button>
+            )}
+            <p className="mt-1.5 text-xs text-ink-muted">{t("lobby.botTagline")}</p>
+          </div>
         </div>
       </Panel>
 

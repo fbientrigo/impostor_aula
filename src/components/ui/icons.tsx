@@ -159,3 +159,13 @@ export function CopyIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function BotIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base(props)}>
+      <rect x="4" y="8" width="16" height="11" rx="2.5" />
+      <path d="M12 4v4M8.5 13v.01M15.5 13v.01M9 17h6" />
+      <path d="M2.5 12v3M21.5 12v3" />
+    </svg>
+  );
+}

@@ -82,6 +82,13 @@ const dict = {
     "lobby.start": "Comenzar ronda",
     "lobby.startNeedsConcept": "Elige un concepto primero.",
     "lobby.startNeedsParticipants": "Se necesitan al menos 2 participantes.",
+    "lobby.addBot": "Agregar bot",
+    "lobby.removeBot": "Quitar {name}",
+    "lobby.botTagline": "Jugadores automáticos para probar la partida completa.",
+    "bot.easy": "Fácil (25%)",
+    "bot.medium": "Medio (50%)",
+    "bot.hard": "Difícil (90%)",
+    "bot.badge": "bot",
 
     // settings labels
     "settings.impostorCount": "Cantidad de impostores",
@@ -248,6 +255,13 @@ const dict = {
     "lobby.start": "Start round",
     "lobby.startNeedsConcept": "Pick a concept first.",
     "lobby.startNeedsParticipants": "At least 2 participants are needed.",
+    "lobby.addBot": "Add bot",
+    "lobby.removeBot": "Remove {name}",
+    "lobby.botTagline": "Automatic players to exercise the whole game.",
+    "bot.easy": "Easy (25%)",
+    "bot.medium": "Medium (50%)",
+    "bot.hard": "Hard (90%)",
+    "bot.badge": "bot",
 
     "settings.impostorCount": "Number of impostors",
     "settings.showCategoryToImpostor": "Show category to impostor",

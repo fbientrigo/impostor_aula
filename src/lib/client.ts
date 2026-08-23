@@ -1,7 +1,7 @@
 // Typed browser -> API helpers. Each function attaches the right auth headers and
 // throws an Error(code) on failure so callers can map the code to a message.
 
-import type { CardPayload, Concept, Role, Room, RoomSettings, RoomStatus } from "./types";
+import type { BotDifficulty, CardPayload, Concept, Role, Room, RoomSettings, RoomStatus } from "./types";
 
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
@@ -54,6 +54,8 @@ export interface RosterEntry {
   reloadedCount: number;
   joinedAt: string;
   role?: Role;
+  isBot: boolean;
+  botDifficulty: BotDifficulty | null;
 }
 
 export function getParticipants(code: string) {
@@ -65,6 +67,28 @@ export function joinRoom(code: string, displayName: string) {
     method: "POST",
     headers: jsonHeaders,
     body: JSON.stringify({ displayName }),
+  });
+}
+
+// ---- bots (host only) -----------------------------------------------------
+
+/** Add one (or `count`) server-controlled bot(s) of the given difficulty. */
+export function addBot(code: string, hostToken: string, difficulty: BotDifficulty, count = 1) {
+  return call<{ added: { id: string; displayName: string; botDifficulty: BotDifficulty }[] }>(
+    `/api/rooms/${code}/bots`,
+    {
+      method: "POST",
+      headers: { ...jsonHeaders, ...hostHeaders(hostToken) },
+      body: JSON.stringify({ difficulty, count }),
+    },
+  );
+}
+
+/** Remove a bot from the lobby before the round starts. */
+export function removeBot(code: string, hostToken: string, botId: string) {
+  return call<{ ok: boolean }>(`/api/rooms/${code}/bots/${botId}`, {
+    method: "DELETE",
+    headers: hostHeaders(hostToken),
   });
 }
 
