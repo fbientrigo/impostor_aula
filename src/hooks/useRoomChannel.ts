@@ -10,7 +10,7 @@ import { roomChannelName } from "@/lib/realtime";
 import type { RoomEvent } from "@/lib/types";
 
 const POLL_MS = 4000;
-const EVENTS: RoomEvent[] = ["lobby_update", "round_started", "phase_changed", "vote_update"];
+const EVENTS: RoomEvent[] = ["lobby_update", "round_started", "phase_changed", "vote_update", "timer_changed"];
 
 export function useRoomChannel(code: string | null, onEvent: () => void) {
   const cb = useRef(onEvent);
