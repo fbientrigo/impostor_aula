@@ -16,6 +16,9 @@ export type Difficulty = "basic" | "intermediate" | "advanced";
 /** Bot skill band. Purely a probability knob (see src/lib/bots.ts). */
 export type BotDifficulty = "easy" | "medium" | "hard";
 
+/** Teacher-selectable classroom timer presets. */
+export type TimerDurationSeconds = 30 | 120 | 300;
+
 export interface RoomSettings {
   impostorCount: number;
   showCategoryToImpostor: boolean;
@@ -24,6 +27,9 @@ export interface RoomSettings {
   trackTabLeaving: boolean;
   /** 0 disables auto-hide. */
   cardAutoHideSeconds: number;
+  /** Shared classroom timer. Null means no timer is running. */
+  timerEndsAt: string | null;
+  timerDurationSeconds: TimerDurationSeconds | null;
 }
 
 export interface Room {
@@ -94,7 +100,8 @@ export type RoomEvent =
   | "lobby_update"
   | "round_started"
   | "phase_changed"
-  | "vote_update";
+  | "vote_update"
+  | "timer_changed";
 
 export const DEFAULT_SETTINGS: RoomSettings = {
   impostorCount: 1,
@@ -103,4 +110,6 @@ export const DEFAULT_SETTINGS: RoomSettings = {
   requireVoteJustification: false,
   trackTabLeaving: true,
   cardAutoHideSeconds: 0,
+  timerEndsAt: null,
+  timerDurationSeconds: null,
 };
