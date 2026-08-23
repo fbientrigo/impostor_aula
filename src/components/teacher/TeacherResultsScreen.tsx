@@ -1,7 +1,8 @@
 "use client";
 
 // Teacher results: outcome, the concept (the educational payoff, given visual
-// priority), vote breakdown, and a confirmed "new round" reset.
+// priority), vote breakdown, and a confirmed "new round" reset that preserves
+// the same participants/groups.
 
 import { useEffect, useState } from "react";
 import { useLang } from "@/components/LangProvider";
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export function TeacherResultsScreen({ code, hostToken, onChanged }: Props) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [data, setData] = useState<ResultsPayload | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -103,8 +104,13 @@ export function TeacherResultsScreen({ code, hostToken, onChanged }: Props) {
 
       <div className="lg:col-span-2">
         <Button size="lg" onClick={() => setConfirming(true)} disabled={busy}>
-          {t("results.newRound")}
+          {lang === "es" ? "Nueva ronda · mismos grupos" : "New round · same groups"}
         </Button>
+        <p className="mt-2 text-sm text-ink-secondary">
+          {lang === "es"
+            ? "Los grupos permanecen conectados; no necesitan volver a escanear el QR."
+            : "Groups stay connected; they do not need to scan the QR again."}
+        </p>
       </div>
 
       <ConfirmDialog
