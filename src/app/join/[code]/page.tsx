@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { RoundTimerOverlay } from "@/components/RoundTimerOverlay";
 import { ConfirmDialog, DrawerItem, ExitIcon, Panel, Spinner } from "@/components/ui";
 import { useLang } from "@/components/LangProvider";
 import { useRoomChannel } from "@/hooks/useRoomChannel";
@@ -119,6 +120,13 @@ export default function JoinPage() {
         onConfirm={leaveRoom}
         onCancel={() => setConfirmingLeave(false)}
       />
+
+      {identity && room ? (
+        <RoundTimerOverlay
+          endsAt={room.settings.timerEndsAt}
+          durationSeconds={room.settings.timerDurationSeconds}
+        />
+      ) : null}
     </main>
   );
 }
